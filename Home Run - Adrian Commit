@@ -1,0 +1,423 @@
+var score=0;
+frameRate(14);
+var currentScene=0;
+var startTime;
+var xPos = 212;
+var yPos = 252;
+var stillPlaying = false;
+var points = 0;
+var homeRuns = 0;
+
+var field1=function(x,y,h){
+    background(108, 186, 104);// background color
+    noStroke();
+    fill(133, 64, 21);
+    arc(x-200*h/222,y-393*h/222,h/222*590,h/222*768,222,320);//infield dirt
+    fill(108, 186, 104);
+    triangle(x+-20*h/222,y-616*h/222,x-365*h/222,y-608*h/222,x-199*h/222,y-435*h/222);//bottom infild grass
+    triangle(x+-25*h/222,y-614*h/222,x-363*h/222,y-606*h/222,x-196*h/222,y-725*h/222);//top infield
+    fill(133, 64, 21);
+    ellipse(x-197*h/222,y-599*h/222,h/222*67,h/222*73);//mound
+    fill(133, 64, 21);
+    ellipse(x-192*h/222,y-414*h/222,h/222*167,h/222*136);//home plate dirt
+    ellipse(x-49*h/222,y-613*h/222,h/222*67,h/222*60);//first base dirt
+    ellipse(x-344*h/222,y-608*h/222,h/222*67,h/222*59);// third base dirt
+    ellipse(x-195*h/223,y-717*h/222,h/222*67,h/222*59);// second base dirt
+    strokeWeight(1.7*h/222);
+    stroke(255, 255, 255);// foul line
+    line(x+-534*h/222,y-779*h/222,x-230*h/222,y-450*h/222);//foul line 
+    line(x+120*h/222,y-759*h/222,x-160*h/222,y-450*h/222);//foul
+    noFill();
+    rect(x-181*h/222,y-450*h/222,h/222*23,h/222*37);//left batters box 
+    rect(x-228*h/222,y-450*h/222,h/222*24,h/222*37);//right batters box 
+    fill(255, 255, 255);
+    rect(x-366*h/222,y-620*h/222,h/222*20,h/222*21);//third base 
+    rect(x-203*h/222,y-737*h/222,h/222*20,h/222*21);//seccond base 
+    rect(x-45*h/222,y-618*h/222,h/222*19,h/222*21);//first base 
+    
+    rect(x-208*h/222,y-604*h/222,h/356*38,h/361*8);// rubber mound 
+    
+    noStroke();
+    rect(x-201*h/222,y-449*h/222,h/222*16,h/222*15);
+    triangle(x-201*h/222,y-436*h/222,x-183*h/222,y-437*h/222,x-191*h/222,y-427*h/222);
+    
+    noFill();
+    strokeWeight(12);
+    stroke(62, 74, 70);
+    arc(x-200*h/222,y-393*h/222,h/222*984,h/222*1020,229,313);//fence 
+    
+};
+
+var drawBaseball= function(x,y,h){
+        fill(255,255,255);
+        noStroke();
+        ellipse(x-203*h/168,y-177*h/168,h/168*165,h/168*165);//the baseball
+        noFill();
+        strokeWeight(3*h/168);
+        stroke(255, 0, 0);
+        arc(x-289*h/168,y-159*h/168,h/168*135,h/168*142,-69,47);//left seam
+        arc(x-94*h/168,y-180*h/168,h/168*165,h/168*168,134,225);//right seam 
+        
+};
+
+var drawBat= function(x,y,h){
+noStroke();
+fill(193, 154, 107);
+rect(x-406*h/43,y-256*h/43,h/43*205,h/43*39,h/43*13);
+quad(x-210*h/43, y-256*h/43, x-65*h/43, y-245*h/43, x-65*h/43, y-233*h/43, x-210*h/43, y-217*h/43);// the bat itself
+ellipse(x-57*h/43,y-238*h/43,h/43*-26,h/43*35);//handle of the bat 
+// the tape of the bat 
+fill(0, 0, 0);
+quad(x-192*h/43, y-254*h/43, x-71*h/43, y-245*h/43, x-71*h/43, y-233*h/43, x-192*h/43, y-220*h/43);
+};
+
+var mySweater= function(bitmojiX,bitmojiY,bitmojiH){
+noStroke();
+fill(255, 0, 0);
+rect(bitmojiX-48*bitmojiH/167,bitmojiY-56*bitmojiH/167,bitmojiH/167*75,bitmojiH/167*87,bitmojiH/167*18);//sweater
+
+arc(bitmojiX-11*bitmojiH/167,bitmojiY-50*bitmojiH/167,bitmojiH/167*73,bitmojiH/167*46,180,360);
+fill(237, 73, 73);
+arc(bitmojiX-11*bitmojiH/167,bitmojiY-50*bitmojiH/167,bitmojiH/167*67,bitmojiH/167*41,180,360);//hoodie 
+
+strokeWeight(30*bitmojiH/167);
+stroke(255, 0, 0);
+line(bitmojiX-45*bitmojiH/167,bitmojiY-40*bitmojiH/167, bitmojiX-61*bitmojiH/167, bitmojiY+17*bitmojiH/167);// left arm
+strokeWeight(30*bitmojiH/167);
+stroke(255, 0, 0);
+line(bitmojiX+25*bitmojiH/167, bitmojiY-40*bitmojiH/167, bitmojiX+37*bitmojiH/167, bitmojiY+17*bitmojiH/167);//right arm
+
+var f = createFont("cursive");
+fill(255, 255, 255);
+textFont(f);
+textSize(35*bitmojiH/167);
+text("A P",bitmojiX-42*bitmojiH/167,bitmojiY-37*bitmojiH/167,bitmojiH/167*188,bitmojiH/167*160);//sweater text
+};
+
+var myHead = function(bitmojiX,bitmojiY,bitmojiH){
+noStroke();
+fill(219, 150, 81);
+rect(bitmojiX-28*bitmojiH/167,bitmojiY-73*bitmojiH/167,bitmojiH/167*34,bitmojiH/167*30,bitmojiH/167*108);//neck
+
+fill(198,134,66);// skin color 
+ellipse(bitmojiX-10*bitmojiH/167,bitmojiY-102*bitmojiH/167,bitmojiH/167*83,bitmojiH/167*100);// head
+
+fill(255, 255, 255);//eye color
+ellipse(bitmojiX+4*bitmojiH/167,bitmojiY-109*bitmojiH/167,bitmojiH/167*15,bitmojiH/167*8);//Right eye 
+ellipse(bitmojiX-24*bitmojiH/167,bitmojiY-109*bitmojiH/167,bitmojiH/167*15,bitmojiH/167*8);// Left eye 
+
+fill(99,78,52);//pupil color
+ellipse(bitmojiX-24*bitmojiH/167,bitmojiY-109*bitmojiH/167,bitmojiH/167*10,bitmojiH/167*10);//left pupil
+ellipse(bitmojiX+4*bitmojiH/167,bitmojiY-109*bitmojiH/167,bitmojiH/167*10,bitmojiH/167*10);// right pupil
+
+fill(255, 255, 255);
+arc(bitmojiX-47*bitmojiH/167,bitmojiY-65*bitmojiH/167,bitmojiH/167*22,bitmojiH/167*42,238,359);//face side
+arc(bitmojiX+27*bitmojiH/167,bitmojiY-64*bitmojiH/167,bitmojiH/167*23,bitmojiH/167*42,181,306);//face side
+
+fill(201,130,118);
+arc(bitmojiX-10*bitmojiH/167,bitmojiY-87*bitmojiH/167,bitmojiH/167*34,bitmojiH/167*32,0,180);//lips
+
+fill(255, 255, 255);
+arc(bitmojiX-10*bitmojiH/167,bitmojiY-87*bitmojiH/167,bitmojiH/167*32,bitmojiH/167*30,0,180);//smile
+
+
+noFill();
+strokeWeight(0.5*bitmojiH/167);
+stroke(0, 0, 0);
+arc(bitmojiX-12*bitmojiH/167,bitmojiY-99*bitmojiH/167,bitmojiH/167*13,bitmojiH/167*14,6,257);//nose
+};
+
+var myHat =function(bitmojiX,bitmojiY,bitmojiH){
+noStroke();
+fill(108, 199, 204);
+arc(bitmojiX-9*bitmojiH/167,bitmojiY-140*bitmojiH/167,bitmojiH/167*86,bitmojiH/167*101,161,380);//hat 
+
+fill(127, 244, 255);
+ellipse(bitmojiX-8*bitmojiH/167,bitmojiY-128*bitmojiH/167,bitmojiH/167*87,bitmojiH/167*30);//hat Brim
+
+fill(255, 238, 0);
+var f = createFont("cursive");
+textFont(f);
+textSize(30*bitmojiH/167);
+text("B",bitmojiX-21*bitmojiH/167,bitmojiY-176*bitmojiH/167,bitmojiH/167*164,bitmojiH/167*167);//hat text 
+};
+
+var drawBitmoji1= function(bitmojiX,bitmojiY,bitmojiH){
+    
+    mySweater( bitmojiX,bitmojiY,bitmojiH);
+    myHead(bitmojiX,bitmojiY,bitmojiH);
+    myHat(bitmojiX,bitmojiY,bitmojiH);
+   
+};
+
+
+var drawBitmoji2 = function(xPos, yPos, bitmojiHeight) {
+
+fill (38, 31, 31);
+rect (xPos+-31* bitmojiHeight/150, yPos+36*bitmojiHeight/150, bitmojiHeight/150*61, bitmojiHeight/150*84); //body
+
+fill (128, 76, 60); //skin tone
+ellipse (xPos, yPos, bitmojiHeight/150*83, bitmojiHeight/150*100); // head
+fill(255, 255, 255);
+
+
+fill (5, 5, 5);
+
+
+stroke (0, 0, 0);
+
+fill (43, 32, 32); //brown eyes
+
+ellipse (xPos-14*bitmojiHeight/150, yPos+2*bitmojiHeight/150, bitmojiHeight/150*6, bitmojiHeight/150*4); //left eye
+
+ellipse (xPos+10*bitmojiHeight/150 , yPos+2*bitmojiHeight/150, bitmojiHeight/150*6, bitmojiHeight/150*4); //right eye
+
+fill (116, 61, 43); //skin tone
+bezier (xPos-2*bitmojiHeight/150, yPos, xPos+11*bitmojiHeight/150, yPos+21*bitmojiHeight/150, xPos, yPos+14*bitmojiHeight/150, xPos+4*bitmojiHeight/150, yPos+12*bitmojiHeight/150); //nose
+fill (255, 255, 255)
+;
+
+//white fill for teeth
+arc(xPos-1*bitmojiHeight/150, yPos+29*bitmojiHeight/150, bitmojiHeight/150*30, bitmojiHeight/150*17, 1,80); //mouth
+line (xPos-19*bitmojiHeight/150, yPos+28*bitmojiHeight/150, xPos+13*bitmojiHeight/150, yPos+28*bitmojiHeight/150); //top of mouth
+stroke (240, 235, 235); // for initials
+
+arc(xPos-1*bitmojiHeight/150, yPos+29*bitmojiHeight/150, bitmojiHeight/150*30, bitmojiHeight/150*17, 1, 180); //mouth
+
+stroke (245, 240, 240);
+fill (10, 6, 6);
+
+line (xPos+-14*bitmojiHeight/150, yPos+55*bitmojiHeight/150, xPos+-28*bitmojiHeight/150, yPos+92*bitmojiHeight/150);
+line (xPos+-13*bitmojiHeight/150, yPos+54*bitmojiHeight/150, xPos+-7*bitmojiHeight/150, yPos+94*bitmojiHeight/150);
+line (xPos+-24*bitmojiHeight/150, yPos+79*bitmojiHeight/150, xPos+-7*bitmojiHeight/150, yPos+81*bitmojiHeight/150);
+};
+
+
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 40;
+    this.txtSize = config.txtSize || 16;
+    this.label = config.label ||"Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    fill(0, 234, 255);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(0, 0, 0);
+    textSize(this.txtSize);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+10, this.y+this.height/4);
+};
+
+Button.prototype.isMouseInside = function() {
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+var startButton = new Button({
+    x: 130,
+    y: 304,
+    label: "   Start Button",
+    onClick: function() {
+        currentScene = 1;
+    }
+});
+var continueToGame = new Button({
+    x: 237,
+    y: 66,
+    label: "Continue to Game",
+    onClick: function() {
+        currentScene = 2;
+    }
+});
+var playBall= new Button({
+    x: -11,
+    y: 302,
+    label: "Play Ball! ",
+    onClick: function(){
+        stillPlaying = true;
+        
+    }
+});
+
+var backToMain = new Button({
+    x: -11,
+    y: 350,
+    txtSize:13,
+    label: "Back to main menu",
+    onClick: function() {
+      currentScene = 0;
+      stillPlaying = false;
+   }
+});
+
+//splash screen
+
+var splashScreen = function(){
+    background (47, 66, 102);
+    fill(0, 174, 255);
+    if (currentScene ===0){
+        textSize(65);
+        text("Home Run!!!", 34, -17);
+        fill(235, 245, 255);
+        noStroke();
+        ellipse(49, 336, 87, 78);
+        ellipse(344, 333, 87, 78);
+        fill(0, 174, 255);//name color
+        textSize(20);
+        text("Adrian Pimentel",1, 366);
+        text("Abu Saine",304, 366);
+        startButton.draw();
+        drawBitmoji1(49,352, 44);
+        drawBitmoji2(342,321, 44);
+        strokeWeight(5);
+        stroke(0, 0, 0);
+        line(32,213,106,177);
+        line(7,176,100,135);
+        line(7,278,100,234);
+        drawBaseball(384,332,145);
+        image(getImage("space/star"), -2, 115, 50, 50);// 1st star 
+        image(getImage("space/star"), 94, 71, 50, 50);//2nd star
+        image(getImage("space/star"), 112, 241, 50, 50);//3rd star left of ball
+        image(getImage("space/star"), 295, 80, 50, 50);//top right
+        image(getImage("space/star"), 338, 183, 50, 50);//middle 
+        image(getImage("space/star"), 251, 248, 50, 50);//bottom
+        
+        
+    }
+};
+
+//instructions screen
+var instructionsScreen = function(){
+    if (currentScene === 1){
+       background(157, 198, 245); 
+       fill(255, 47, 0);
+       textSize(38);
+       text("Welcome to Home Run",31,10);
+       textSize(35);
+       text("Instructions:",116,85);
+       textSize(20);
+       text("    - To play, you must hit the ball",20,129);
+       text("      as far as you can!!!",20,155);
+       text("    - To hit it, move the bat to the ball. ",20,198);
+       text("    - Earn points by hitting objects in the sky",20,236);
+       text("      homeruns, and objects past the fence!!! ",20,261);
+       
+    
+        fill(130, 79, 43);
+        image(getImage("cute/GrassBlock"), -7, 337, width, 62);
+        image(getImage("cute/TreeTall"), 323, 257);
+        drawBat(295,477,22);
+        drawBaseball(135,380,22);
+        continueToGame.draw();
+    }
+    
+};
+
+var throwBall = function(){     //loop makes the ball repitch
+drawBaseball(212,yPos,8);
+        yPos+=4;       
+        
+        if(yPos >= 383){          
+            yPos = 252;
+}
+}; //function to make the ball thrown 
+    
+
+var playGame = function(){
+    currentScene = 2;
+     field1(323,615,133);//baseball field 
+     image(getImage("cute/WaterBlock"), 247,-23,162,80);//fans and objects behind
+     image(getImage("space/octopus"), 332,-9,50,50);
+     image(getImage("space/rocketship"), 260,-15,50,50);
+     image(getImage("cute/TreeTall"), 118,-14,71,81);
+     image(getImage("cute/TreeTall"), 201,-14,71,81);
+     image(getImage("cute/TreeTall"), 156,-10,71,81);
+     image(getImage("cute/Rock"), 359,27,53,58);
+     image(getImage("cute/Rock"), 245,27,43,51);
+     image(getImage("cute/Rock"), 299,31,65,66);
+     image(getImage("cute/WallBlock"), 67,47,32,38);
+     image(getImage("cute/RoofSouth"), 67,38,34,38);
+     
+     image(getImage("cute/CharacterBoy"), 112,44,32,38);
+     image(getImage("cute/CharacterHornGirl"), 46,68,32,38);
+     image(getImage("cute/CharacterPinkGirl"), 279,44,32,38);
+     image(getImage("cute/WallBlock"), 82,6,32,38);
+     image(getImage("cute/CharacterPrincessGirl"), 339,72,32,38);
+     
+     
+     image(getImage("cute/RoofSouth"), 81,-3,32,38);
+     
+    image(getImage( "cute/ChestOpen"),367, 63,29,58);
+    image(getImage( "cute/GemOrange"),370, 74,7,32);
+    image(getImage( "cute/GemGreen"),377, 74,7,32);
+    image(getImage( "cute/GemBlue"),384, 73,7,32);
+    image(getImage("cute/WallBlockTall"), 7,75,44,38);  
+    image(getImage("cute/WallBlockTall"), 7,56,44,38);
+    image(getImage("cute/WallBlockTall"), 7,37,44,38);
+    image(getImage("cute/WindowTall"), 7,18,44,38);
+    image(getImage("cute/Selector"), 7,-1,44,38);
+    
+    
+    drawBitmoji1(237,356,33);//Adrian's bitmoji(the hitter)
+    drawBitmoji2(207,225,33);//Abu's bitmoji (the Pitcher)
+    
+    if (stillPlaying === true){ // function to make the bat and ball drawn 
+        drawBat(mouseX,mouseY,5);
+        throwBall();
+        strokeWeight(3);
+        stroke(41, 65, 120);
+        noFill();
+         rect(258,312,138,72,22);
+    }
+    var f = createFont("monospace");
+    textFont(f);
+    fill(41, 65, 120);
+    textSize(12);
+    text("Points: " + points,270,320);
+    text("Home Runs: " + homeRuns, 270,340);
+    playBall.draw();//allows the game to begin 
+    backToMain.draw();// brings the user back to the main screen 
+   
+}; //the actual game 
+
+
+var mouseClicked = function(){ 
+        if (currentScene === 0){
+            startButton.handleMouseClick();
+        }
+        else if (currentScene === 1) {
+            continueToGame.handleMouseClick();
+        }
+         else if (currentScene === 2 && stillPlaying === false ) {
+            playBall.handleMouseClick();
+         }
+         else if (currentScene === 2){
+          backToMain.handleMouseClick();   
+         }
+}; //mouse clicked 
+
+var draw = function() {
+    if(currentScene === 0){
+        splashScreen();
+    }
+    else if  (currentScene === 1){
+        instructionsScreen();
+    }
+    else if  (currentScene === 2){
+        playGame();
+        
+        }
+        
+}; //draw function 
